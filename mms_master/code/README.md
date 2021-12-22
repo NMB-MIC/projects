@@ -1,7 +1,14 @@
 # comment program version
 #### @auther Suraphop Bunsawat
 
-### import with mms_pi_center_mssql_local.json file
+### raspberry pi in center and saperate database in local
+
+1. import node-red
+mms_pi_center_mssql_local.json file
+
+2. restore mssql database
+MMS.bak
+
 
 #### Description
 
