@@ -6,7 +6,7 @@
 - show real-time machine status on dashboard
 - report, daily and monthly
 
-#Testing set 
+# Testing set 
 ![alt text](https://github.com/NMB-MIC/projects/blob/main/mms_master/testset_1.JPG)
 ![alt text](https://github.com/NMB-MIC/projects/blob/main/mms_master/testset_2.JPG)
 ![alt text](https://github.com/NMB-MIC/projects/blob/main/mms_master/testset_3.JPG)

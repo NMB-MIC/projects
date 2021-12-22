@@ -17,7 +17,7 @@
 - show real-time machine status
 ![alt text](https://github.com/NMB-MIC/projects/blob/main/mms_master/code/dashboard.JPG)
 - dialy report
-![alt text](https://github.com/NMB-MIC/projects/blob/main/mms_master/code/dialy_report.JPG)
+![alt text](https://github.com/NMB-MIC/projects/blob/main/mms_master/code/daily_report.JPG)
 - monthly report
 ![alt text](https://github.com/NMB-MIC/projects/blob/main/mms_master/code/monthly_report.JPG)
 - show status machines
