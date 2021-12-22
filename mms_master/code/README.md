@@ -3,12 +3,14 @@
 
 ## raspberry pi in center and saperate database in local
 
-1. import node-red in raspberry pi 
+1. import a json file to node-red in raspberry pi
+``` 
 mms_pi_center_mssql_local.json
-
-2. restore mssql database in local server
+```
+2. restore the database in local server
+```
 MMS.bak
-
+```
 
 #### Description
 
