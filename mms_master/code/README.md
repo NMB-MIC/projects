@@ -36,6 +36,7 @@ MMS.bak
 - show status machines
 ![alt text](https://github.com/NMB-MIC/projects/blob/main/mms_master/pictures/js_status.JPG)
 
+
 ### raspberry pi only send mqtt to local server
 1. import a json file to node-red in raspberry pi
 ``` 
