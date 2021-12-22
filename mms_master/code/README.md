@@ -1,7 +1,7 @@
 # comment program version
 #### @auther Suraphop Bunsawat
 
-## raspberry pi in center and saperate database in local
+## model raspberry pi as centerization and saperate database in local server
 
 1. import a json file to node-red in raspberry pi
 ``` 
