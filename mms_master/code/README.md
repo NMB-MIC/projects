@@ -1,7 +1,7 @@
 # comment program version
 #### @auther Suraphop Bunsawat
 
-### raspberry pi in center and saperate database in local
+## raspberry pi in center and saperate database in local
 
 1. import node-red in raspberry pi 
 mms_pi_center_mssql_local.json
@@ -23,7 +23,7 @@ MMS.bak
 #### dashboard tab
 - show real-time machine status
 ![alt text](https://github.com/NMB-MIC/projects/blob/main/mms_master/pictures/js_dashboard.JPG)
-- dialy report
+- daily report
 ![alt text](https://github.com/NMB-MIC/projects/blob/main/mms_master/pictures/js_daily_report.JPG)
 - monthly report
 ![alt text](https://github.com/NMB-MIC/projects/blob/main/mms_master/pictures/js_monthly_report.JPG)
