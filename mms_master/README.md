@@ -1,4 +1,5 @@
 # MMS master model
+#### @auther Suraphop Bunsawat
 
 - collect status signals from machines and send mqtt to server
 - store status data in mssql database
