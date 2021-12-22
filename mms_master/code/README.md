@@ -1,4 +1,4 @@
-# comment program version
+# Program version
 #### @auther Suraphop Bunsawat
 
 ## model raspberry pi as centerization and saperate database in local server
