@@ -1,0 +1,250 @@
+[
+    {
+        "id": "e816c0cf9e8e4dca",
+        "type": "tab",
+        "label": "gpio",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c8fb93a42c4296ed",
+        "type": "rpi-gpio in",
+        "z": "e816c0cf9e8e4dca",
+        "name": "Run",
+        "pin": "14",
+        "intype": "tri",
+        "debounce": "25",
+        "read": false,
+        "bcm": true,
+        "x": 350,
+        "y": 200,
+        "wires": [
+            [
+                "95f446a9ad616e0e"
+            ]
+        ]
+    },
+    {
+        "id": "814c4757d8645220",
+        "type": "rpi-gpio in",
+        "z": "e816c0cf9e8e4dca",
+        "name": "stop",
+        "pin": "15",
+        "intype": "tri",
+        "debounce": "25",
+        "read": false,
+        "bcm": true,
+        "x": 350,
+        "y": 300,
+        "wires": [
+            [
+                "d3ede1033f632036"
+            ]
+        ]
+    },
+    {
+        "id": "90142d56e6a0282f",
+        "type": "rpi-gpio in",
+        "z": "e816c0cf9e8e4dca",
+        "name": "alarm",
+        "pin": "18",
+        "intype": "tri",
+        "debounce": "25",
+        "read": false,
+        "bcm": true,
+        "x": 350,
+        "y": 400,
+        "wires": [
+            [
+                "c212cd1fd0690f2f"
+            ]
+        ]
+    },
+    {
+        "id": "93a2dbc3c890087c",
+        "type": "mqtt out",
+        "z": "e816c0cf9e8e4dca",
+        "name": "",
+        "topic": "001",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "04d1b145274bf015",
+        "x": 1010,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "d939b4632ce636b8",
+        "type": "function",
+        "z": "e816c0cf9e8e4dca",
+        "name": "",
+        "func": "msg.payload = '1'\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 200,
+        "wires": [
+            [
+                "93a2dbc3c890087c"
+            ]
+        ]
+    },
+    {
+        "id": "10649a220364e685",
+        "type": "function",
+        "z": "e816c0cf9e8e4dca",
+        "name": "",
+        "func": "msg.payload = '0'\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 300,
+        "wires": [
+            [
+                "93a2dbc3c890087c"
+            ]
+        ]
+    },
+    {
+        "id": "5fa731e2dbc1e999",
+        "type": "function",
+        "z": "e816c0cf9e8e4dca",
+        "name": "",
+        "func": "msg.payload = '2'\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 400,
+        "wires": [
+            [
+                "93a2dbc3c890087c"
+            ]
+        ]
+    },
+    {
+        "id": "95f446a9ad616e0e",
+        "type": "switch",
+        "z": "e816c0cf9e8e4dca",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 490,
+        "y": 200,
+        "wires": [
+            [
+                "d939b4632ce636b8"
+            ]
+        ]
+    },
+    {
+        "id": "d3ede1033f632036",
+        "type": "switch",
+        "z": "e816c0cf9e8e4dca",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 490,
+        "y": 300,
+        "wires": [
+            [
+                "10649a220364e685"
+            ]
+        ]
+    },
+    {
+        "id": "c212cd1fd0690f2f",
+        "type": "switch",
+        "z": "e816c0cf9e8e4dca",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 490,
+        "y": 400,
+        "wires": [
+            [
+                "5fa731e2dbc1e999"
+            ]
+        ]
+    },
+    {
+        "id": "4e1a27331ad90067",
+        "type": "comment",
+        "z": "e816c0cf9e8e4dca",
+        "name": "input plc signals",
+        "info": "",
+        "x": 280,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "04d1b145274bf015",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "192.168.1.100",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    }
+]

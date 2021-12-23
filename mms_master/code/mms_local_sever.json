@@ -1,0 +1,1471 @@
+[
+    {
+        "id": "0ab5350a4a205893",
+        "type": "tab",
+        "label": "insert_data",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ebc0845a.8bae18",
+        "type": "function",
+        "z": "0ab5350a4a205893",
+        "name": "Merge",
+        "func": "msg.statuscode = msg.payload\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 580,
+        "wires": [
+            [
+                "1cefec0f.0f2894"
+            ]
+        ]
+    },
+    {
+        "id": "3bfb192c.4d14e6",
+        "type": "function",
+        "z": "0ab5350a4a205893",
+        "name": "Insert database",
+        "func": "function formatDate(date) {\n  var hours = date.getHours();\n  var minutes = date.getMinutes();\n  var seconds = date.getSeconds();\n  var ampm = hours >= 12 ? 'pm' : 'am';\n  minutes = minutes < 10 ? '0'+minutes : minutes;\n  seconds = seconds < 10 ? '0'+seconds : seconds;\n  var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;\n  \n   if(hours >= 0 && hours < 7)\n  {\n     date.setDate(today.getDate()-1);\n  } \n  \n  \n  var dateFormat = date.toLocaleDateString('en-GB', {  day: 'numeric', month: 'short', year: 'numeric'});\n  return dateFormat + \"  \" + strTime;\n}\n\nvar today = new Date();\nvar MfgDate = formatDate(today);\n\n\nmsg.payload = \"INSERT INTO [MMS].[dbo].[MCLog]\" +\n\"VALUES (getdate(),'\" + MfgDate + \"','\" + msg.topic + \"','\" + msg.MC[0].MC + \"' ,'\" + msg.Status[0].Status + \"')\"\n\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 640,
+        "wires": [
+            [
+                "b849e718.5fe808"
+            ]
+        ]
+    },
+    {
+        "id": "95c0c324.74e23",
+        "type": "function",
+        "z": "0ab5350a4a205893",
+        "name": "SetMC",
+        "func": "msg.MC = msg.payload \n\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 890,
+        "y": 640,
+        "wires": [
+            [
+                "3bfb192c.4d14e6"
+            ]
+        ]
+    },
+    {
+        "id": "d46d5a38.5a3ec8",
+        "type": "function",
+        "z": "0ab5350a4a205893",
+        "name": "Select MC",
+        "func": "msg.payload = \"select [MC] from [MMS].[dbo].[MasterMCUxMC]\" +\n\"where [NodeMCU] = '\"+msg.topic+\"'\";\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1190,
+        "y": 580,
+        "wires": [
+            [
+                "de5c683b.879f88"
+            ]
+        ]
+    },
+    {
+        "id": "1cefec0f.0f2894",
+        "type": "function",
+        "z": "0ab5350a4a205893",
+        "name": "Select Status",
+        "func": "msg.payload = \"select [Status] from [MMS].[dbo].[MasterStatusCode] where [StatusCode] = '\"+msg.statuscode+\"'\";\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 580,
+        "wires": [
+            [
+                "51b895c.be2f96c"
+            ]
+        ]
+    },
+    {
+        "id": "d549a178.2a81c",
+        "type": "function",
+        "z": "0ab5350a4a205893",
+        "name": "SetStatus",
+        "func": "msg.Status =msg.payload \n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1040,
+        "y": 580,
+        "wires": [
+            [
+                "d46d5a38.5a3ec8"
+            ]
+        ]
+    },
+    {
+        "id": "dd23b5c1.e01388",
+        "type": "comment",
+        "z": "0ab5350a4a205893",
+        "name": "Insert Data",
+        "info": "",
+        "x": 260,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "b849e718.5fe808",
+        "type": "MSSQL-UCGv2",
+        "z": "0ab5350a4a205893",
+        "mssqlCN": "e4f16d3f.f720b",
+        "name": "MSSQL",
+        "query": "",
+        "outField": "payload",
+        "x": 1220,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "de5c683b.879f88",
+        "type": "MSSQL-UCGv2",
+        "z": "0ab5350a4a205893",
+        "mssqlCN": "e4f16d3f.f720b",
+        "name": "MSSQL",
+        "query": "",
+        "outField": "payload",
+        "x": 740,
+        "y": 640,
+        "wires": [
+            [
+                "95c0c324.74e23"
+            ]
+        ]
+    },
+    {
+        "id": "51b895c.be2f96c",
+        "type": "MSSQL-UCGv2",
+        "z": "0ab5350a4a205893",
+        "mssqlCN": "e4f16d3f.f720b",
+        "name": "MSSQL",
+        "query": "",
+        "outField": "payload",
+        "x": 900,
+        "y": 580,
+        "wires": [
+            [
+                "d549a178.2a81c"
+            ]
+        ]
+    },
+    {
+        "id": "365b23f0.7f77fc",
+        "type": "debug",
+        "z": "0ab5350a4a205893",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 610,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "2e51559a.f3630a",
+        "type": "mqtt in",
+        "z": "0ab5350a4a205893",
+        "name": "",
+        "topic": "001",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "04d1b145274bf015",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 350,
+        "y": 580,
+        "wires": [
+            [
+                "365b23f0.7f77fc",
+                "ebc0845a.8bae18"
+            ]
+        ]
+    },
+    {
+        "id": "c6f0fb2eb1082ffb",
+        "type": "inject",
+        "z": "0ab5350a4a205893",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 07 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "001",
+        "payloadType": "str",
+        "x": 390,
+        "y": 920,
+        "wires": [
+            [
+                "4517906faaf69873"
+            ]
+        ]
+    },
+    {
+        "id": "084129f2f147db44",
+        "type": "comment",
+        "z": "0ab5350a4a205893",
+        "name": "Stamp data new day",
+        "info": "",
+        "x": 290,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "4517906faaf69873",
+        "type": "function",
+        "z": "0ab5350a4a205893",
+        "name": "select Status",
+        "func": "\n msg.topic = msg.payload;\n\nmsg.payload =  `\nSELECT TOP (1) [Status]\n  FROM [MMS].[dbo].[MCLog]\n  where NodeMCU = '`+msg.payload+`'\n  order by TimeStamp desc`\n  \n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 920,
+        "wires": [
+            [
+                "83f8efdffff9c856"
+            ]
+        ]
+    },
+    {
+        "id": "881be9a8d5bd8b2f",
+        "type": "function",
+        "z": "0ab5350a4a205893",
+        "name": "Get status",
+        "func": "msg.Status = msg.payload[0].Status\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 870,
+        "y": 920,
+        "wires": [
+            [
+                "6afc9612dac54ae2"
+            ]
+        ]
+    },
+    {
+        "id": "6afc9612dac54ae2",
+        "type": "function",
+        "z": "0ab5350a4a205893",
+        "name": "Select MC",
+        "func": "msg.payload = \"select [MC] from [MMS].[dbo].[MasterMCUxMC]\" +\n\"where [NodeMCU] = '\"+msg.topic+\"'\";\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1050,
+        "y": 920,
+        "wires": [
+            [
+                "091045a6c7e6596d"
+            ]
+        ]
+    },
+    {
+        "id": "6c323e061008d98f",
+        "type": "function",
+        "z": "0ab5350a4a205893",
+        "name": "SetMC",
+        "func": "msg.MC = msg.payload[0].MC\n\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 980,
+        "wires": [
+            [
+                "f2452b9eba4e41a2"
+            ]
+        ]
+    },
+    {
+        "id": "f2452b9eba4e41a2",
+        "type": "function",
+        "z": "0ab5350a4a205893",
+        "name": "Insert database",
+        "func": "function formatDate(date) {\n  var hours = date.getHours();\n  var minutes = date.getMinutes();\n  var seconds = date.getSeconds();\n  var ampm = hours >= 12 ? 'pm' : 'am';\n  minutes = minutes < 10 ? '0'+minutes : minutes;\n  seconds = seconds < 10 ? '0'+seconds : seconds;\n  var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;\n  \n   if(hours >= 0 && hours < 7)\n  {\n     date.setDate(today.getDate()-1);\n  } \n  \n  \n  var dateFormat = date.toLocaleDateString('en-GB', {  day: 'numeric', month: 'short', year: 'numeric'});\n  return dateFormat;\n}\n\nvar today = new Date();\nvar MfgDate = formatDate(today);\n\n\nmsg.payload = \"INSERT INTO [MMS].[dbo].[MCLog]\" +\n\"VALUES ('\" + MfgDate + \" 07:00:00','\" + MfgDate + \"','\" + msg.topic + \"','\" + msg.MC + \"' ,'\" + msg.Status + \"')\"\n\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 900,
+        "y": 980,
+        "wires": [
+            [
+                "547a29a98545bc11"
+            ]
+        ]
+    },
+    {
+        "id": "83f8efdffff9c856",
+        "type": "MSSQL-UCGv2",
+        "z": "0ab5350a4a205893",
+        "mssqlCN": "e4f16d3f.f720b",
+        "name": "MSSQL",
+        "query": "",
+        "outField": "payload",
+        "x": 720,
+        "y": 920,
+        "wires": [
+            [
+                "881be9a8d5bd8b2f"
+            ]
+        ]
+    },
+    {
+        "id": "091045a6c7e6596d",
+        "type": "MSSQL-UCGv2",
+        "z": "0ab5350a4a205893",
+        "mssqlCN": "e4f16d3f.f720b",
+        "name": "MSSQL",
+        "query": "",
+        "outField": "payload",
+        "x": 600,
+        "y": 980,
+        "wires": [
+            [
+                "6c323e061008d98f"
+            ]
+        ]
+    },
+    {
+        "id": "547a29a98545bc11",
+        "type": "MSSQL-UCGv2",
+        "z": "0ab5350a4a205893",
+        "mssqlCN": "e4f16d3f.f720b",
+        "name": "MSSQL",
+        "query": "",
+        "outField": "payload",
+        "x": 1060,
+        "y": 980,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ed052c063b1b2e6a",
+        "type": "aedes broker",
+        "z": "0ab5350a4a205893",
+        "name": "",
+        "mqtt_port": 1883,
+        "mqtt_ws_bind": "port",
+        "mqtt_ws_port": "",
+        "mqtt_ws_path": "",
+        "cert": "",
+        "key": "",
+        "certname": "",
+        "keyname": "",
+        "dburl": "",
+        "usetls": false,
+        "x": 380,
+        "y": 220,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "cfa22df6bc2054d8",
+        "type": "comment",
+        "z": "0ab5350a4a205893",
+        "name": "MQTT broker",
+        "info": "",
+        "x": 270,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "d1a44027b2d76de7",
+        "type": "tab",
+        "label": "dashboard",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d3c96c3296280003",
+        "type": "MSSQL-UCGv2",
+        "z": "d1a44027b2d76de7",
+        "mssqlCN": "e4f16d3f.f720b",
+        "name": "MSSQL",
+        "query": "",
+        "outField": "payload",
+        "x": 580,
+        "y": 180,
+        "wires": [
+            [
+                "76f9bd5cf7ccac99",
+                "4f2787bd87c99149"
+            ]
+        ]
+    },
+    {
+        "id": "a045d5273d79922e",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "STOP",
+        "func": "\nvar time\nvar timeint\n\ntime = msg.payload[msg.topic].STOP/3600;\n\n\nmsg.payload = time.toFixed(2);\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 910,
+        "y": 220,
+        "wires": [
+            [
+                "40eb2870d8fcc9c9"
+            ]
+        ]
+    },
+    {
+        "id": "007e5146fd4a5846",
+        "type": "inject",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 270,
+        "y": 180,
+        "wires": [
+            [
+                "c0ed9d121f274c10"
+            ]
+        ]
+    },
+    {
+        "id": "9694d5e0cc25c14e",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "START",
+        "func": "\nvar time\n\ntime = msg.payload[msg.topic].START/3600;\ntime.toFixed(2);\nmsg.payload = time.toFixed(2);\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 180,
+        "wires": [
+            [
+                "875544e79b95e9f9"
+            ]
+        ]
+    },
+    {
+        "id": "09a992acc776d710",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "ALARM",
+        "func": "\nvar time\n\ntime = msg.payload[msg.topic].ALARM/3600;\ntime.toFixed(2);\nmsg.payload =time.toFixed(2);\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 920,
+        "y": 260,
+        "wires": [
+            [
+                "6ac6b9a6abc52cc1"
+            ]
+        ]
+    },
+    {
+        "id": "76f9bd5cf7ccac99",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "MC01",
+        "func": "msg.topic = '0'\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 180,
+        "wires": [
+            [
+                "9694d5e0cc25c14e",
+                "a045d5273d79922e",
+                "09a992acc776d710"
+            ]
+        ]
+    },
+    {
+        "id": "32748cef003c4161",
+        "type": "comment",
+        "z": "d1a44027b2d76de7",
+        "name": "Dashboard",
+        "info": "",
+        "x": 260,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "01cc589888e2583e",
+        "type": "MSSQL-UCGv2",
+        "z": "d1a44027b2d76de7",
+        "mssqlCN": "e4f16d3f.f720b",
+        "name": "MSSQL",
+        "query": "",
+        "outField": "payload",
+        "x": 780,
+        "y": 540,
+        "wires": [
+            [
+                "079a7652057a8e48"
+            ]
+        ]
+    },
+    {
+        "id": "a6830a17793c432d",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "Stacked graph",
+        "func": "msg.payload = [{\n    \"series\": [\"Run\", \"Stop\", \"Alarm\" ],\n    \"data\":  [[msg.payload[0].START], [msg.payload[0].STOP], [msg.payload[0].ALARM]],\n    \"labels\": [msg.payload[0].MC]\n}]\nmsg.ui_control = {\n     options: {\n        scales: {\n            xAxes: [{\n                stacked: true\n            }],\n            yAxes: [{\n                stacked: true\n            }]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 500,
+        "wires": [
+            [
+                "f5e1df526a8aa9d5"
+            ]
+        ]
+    },
+    {
+        "id": "143f8659ccd47026",
+        "type": "comment",
+        "z": "d1a44027b2d76de7",
+        "name": "History diary report",
+        "info": "",
+        "x": 290,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "5e49de0814bf84e1",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "Get data",
+        "func": "var dateSelection = global.get('DatePickerbyDay')\n\nvar dateSelectionPlus = global.get('DatePickerbydayPlus')\n\nmsg.payload = `WITH TMP AS (SELECT TimeStamp,MC,Status\n      ,ISNULL(LAG(TimeStamp) OVER ( PARTITION BY MC ORDER BY TimeStamp desc),'`+dateSelectionPlus+` 07:00:00.000') AS LAST_START_DATE\n\t  FROM [MMS].[dbo].[MCLog]\n\t  where MfgDate = '`+dateSelection+`')  ,\n\tsum1 as (  SELECT TMP.MC,TMP.Status as Status,\n       sum(DATEDIFF(second,TMP.TimeStamp,TMP.LAST_START_DATE)) DATE_DIFF\n  FROM TMP\n  group by MC,Status),\n    \nsetzero as (\n  select\n  [MC]\n  ,isnull([START],0) as [START]\n  ,isnull([STOP],0) as [STOP]  \n  ,isnull([ALARM],0) as [ALARM]  \n   \nFROM sum1 \nPIVOT (sum([DATE_DIFF]) FOR [STATUS] IN ([START],[STOP],[ALARM])) AS P)\nselect [MC]\n,ROUND(CAST(START AS float) / CAST(3600 AS float),2) as START\n,ROUND(CAST(STOP AS float) / CAST(3600 AS float),2) as STOP\n,ROUND(CAST(ALARM AS float) / CAST(3600 AS float),2) as ALARM\nfrom setzero\norder by stop desc`\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 540,
+        "wires": [
+            [
+                "01cc589888e2583e"
+            ]
+        ]
+    },
+    {
+        "id": "4f2787bd87c99149",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "LastUpdate",
+        "func": "function formatDate(date) {\n  var hours = date.getHours();\n  var minutes = date.getMinutes();\n  var seconds = date.getSeconds();\n  var ampm = hours >= 12 ? 'pm' : 'am';\n  minutes = minutes < 10 ? '0'+minutes : minutes;\n  seconds = seconds < 10 ? '0'+seconds : seconds;\n  var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;\n  var dateFormat = date.toLocaleDateString('en-GB', {  day: 'numeric', month: 'short', year: 'numeric'});\n  return dateFormat + \"  \" + strTime;\n}\n\nvar getDate = new Date();\nvar DateResult = formatDate(getDate);\n\nmsg.payload = 'Last update : ' + DateResult;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 140,
+        "wires": [
+            [
+                "abb569631f7348c7"
+            ]
+        ]
+    },
+    {
+        "id": "af3325af22402cc5",
+        "type": "inject",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 260,
+        "y": 540,
+        "wires": [
+            [
+                "8d5b079ba599c387"
+            ]
+        ]
+    },
+    {
+        "id": "c0ed9d121f274c10",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "Get data",
+        "func": "msg.payload = `WITH TMP AS (SELECT TimeStamp,MC,Status\n      ,ISNULL(LAG(TimeStamp) OVER ( PARTITION BY MC ORDER BY TimeStamp desc),getdate()) AS LAST_START_DATE\n\t  FROM [MMS].[dbo].[MCLog]\n\t  where MfgDate = Cast(getdate() as date))  ,\n\tsum1 as (  SELECT TMP.MC,TMP.Status as Status,\n       sum(DATEDIFF(second,TMP.TimeStamp,TMP.LAST_START_DATE)) DATE_DIFF\n  FROM TMP\n  group by MC,Status),\n    \nsetzero as (\n  select\n  [MC]\n  ,isnull([START],0) as [START]\n  ,isnull([STOP],0) as [STOP]  \n  ,isnull([ALARM],0) as [ALARM]  \n   \nFROM sum1 \nPIVOT (sum([DATE_DIFF]) FOR [STATUS] IN ([START],[STOP],[ALARM])) AS P)\n\nselect * from setzero`\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 180,
+        "wires": [
+            [
+                "d3c96c3296280003"
+            ]
+        ]
+    },
+    {
+        "id": "c9a95d84e0b59c79",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "func": "var getDate = new Date(msg.payload)\nvar DateResult = getDate.toLocaleDateString('en-GB', {\n  day: 'numeric', month: 'short', year: 'numeric'\n})\n\n\n\n\nvar date = new Date(msg.payload);\ndate.setDate(date.getDate() + 1);\n\n\n\nvar DateResult2 = date.toLocaleDateString('en-GB', {\n  day: 'numeric', month: 'short', year: 'numeric'\n})\n\n\n\nglobal.set('DatePickerbyDay', DateResult)\nglobal.set('DatePickerbydayPlus', DateResult2)\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 540,
+        "wires": [
+            [
+                "5e49de0814bf84e1"
+            ]
+        ]
+    },
+    {
+        "id": "079a7652057a8e48",
+        "type": "switch",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "empty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 910,
+        "y": 540,
+        "wires": [
+            [
+                "a6830a17793c432d"
+            ],
+            [
+                "69979dbe4bee4aec"
+            ]
+        ]
+    },
+    {
+        "id": "69979dbe4bee4aec",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "Stacked graph",
+        "func": "msg.payload = [{\n    \"series\": [\"Run\", \"Stop\", \"Alarm\" ],\n    \"data\": [ [0,0], [0,0], [0,0] ],\n    \"labels\": [\"None\"]\n}]\nmsg.ui_control = {\n     options: {\n        scales: {\n            xAxes: [{\n                stacked: true\n            }],\n            yAxes: [{\n                stacked: true\n            }]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 580,
+        "wires": [
+            [
+                "f5e1df526a8aa9d5"
+            ]
+        ]
+    },
+    {
+        "id": "591be0eedb8a1d76",
+        "type": "MSSQL-UCGv2",
+        "z": "d1a44027b2d76de7",
+        "mssqlCN": "e4f16d3f.f720b",
+        "name": "MSSQL",
+        "query": "",
+        "outField": "payload",
+        "x": 640,
+        "y": 1020,
+        "wires": [
+            [
+                "59e3f42ae6161283"
+            ]
+        ]
+    },
+    {
+        "id": "f71ed778e6e2f54c",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "Stacked graph",
+        "func": "msg.payload = [{\n    \"series\": [\"Run\", \"Stop\", \"Alarm\" ],\n    \"data\": [ [msg.payload[0].START], [msg.payload[0].STOP], [msg.payload[0].ALARM] ],\n    \"labels\": [msg.payload[0].MC]\n}]\nmsg.ui_control = {\n     options: {\n        scales: {\n            xAxes: [{\n                stacked: true\n            }],\n            yAxes: [{\n                stacked: true\n            }]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 1020,
+        "wires": [
+            [
+                "773abab4b528abf1"
+            ]
+        ]
+    },
+    {
+        "id": "11f91a61313a04ee",
+        "type": "comment",
+        "z": "d1a44027b2d76de7",
+        "name": "History monthly report",
+        "info": "",
+        "x": 300,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "35b6065780dcfd76",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "Get data",
+        "func": "var dateSelection = global.get('DatePickerbyDay')\nvar dateSelection2 = global.get('DatePickerbyDay2')\nvar dateSelectionPlus = global.get('DatePickerbydayPlus')\n\n\nmsg.payload = `WITH TMP AS (SELECT TimeStamp,MC,Status\n      ,ISNULL(LAG(TimeStamp) OVER ( PARTITION BY MC ORDER BY TimeStamp desc),'`+dateSelectionPlus+` 07:00:00.000') AS LAST_START_DATE\n\t  FROM [MMS].[dbo].[MCLog]\n\t where MfgDate between '`+dateSelection+`' and '`+dateSelection2+`' )    ,\n\tsum1 as (  SELECT TMP.MC,TMP.Status as Status,\n       sum(DATEDIFF(second,TMP.TimeStamp,TMP.LAST_START_DATE)) DATE_DIFF\n  FROM TMP\n  group by MC,Status),\n    \nsetzero as (\n  select\n  [MC]\n  ,isnull([START],0) as [START]\n  ,isnull([STOP],0) as [STOP]  \n  ,isnull([ALARM],0) as [ALARM]  \n   \nFROM sum1 \nPIVOT (sum([DATE_DIFF]) FOR [STATUS] IN ([START],[STOP],[ALARM])) AS P)\nselect [MC]\n,ROUND(CAST(START AS float) / CAST(3600 AS float),2) as START\n,ROUND(CAST(STOP AS float) / CAST(3600 AS float),2) as STOP\n,ROUND(CAST(ALARM AS float) / CAST(3600 AS float),2) as ALARM\nfrom setzero\norder by stop desc`\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 480,
+        "y": 1020,
+        "wires": [
+            [
+                "591be0eedb8a1d76"
+            ]
+        ]
+    },
+    {
+        "id": "54fc9b14cb734071",
+        "type": "inject",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 240,
+        "y": 900,
+        "wires": [
+            [
+                "10a5b0bbdd9027b0",
+                "0cf14b22ab11ee6e"
+            ]
+        ]
+    },
+    {
+        "id": "86bae60bf9b46833",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "StartDate",
+        "func": "var getDate = new Date(msg.payload)\nvar DateResult = getDate.toLocaleDateString('en-GB', {\n  day: 'numeric', month: 'short', year: 'numeric'\n})\n\n\nvar date = new Date(msg.payload);\n\n\n\n\n\nglobal.set('DatePickerbyDay', DateResult)\n\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 900,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "59e3f42ae6161283",
+        "type": "switch",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "empty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 770,
+        "y": 1020,
+        "wires": [
+            [
+                "f71ed778e6e2f54c"
+            ],
+            [
+                "6f65cce2d594d215"
+            ]
+        ]
+    },
+    {
+        "id": "6f65cce2d594d215",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "Stacked graph",
+        "func": "msg.payload = [{\n    \"series\": [\"Run\", \"Stop\", \"Alarm\" ],\n    \"data\": [ [0,0], [0,0], [0,0] ],\n    \"labels\": [\"None\"]\n}]\nmsg.ui_control = {\n     options: {\n        scales: {\n            xAxes: [{\n                stacked: true\n            }],\n            yAxes: [{\n                stacked: true\n            }]\n        }\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 1080,
+        "wires": [
+            [
+                "773abab4b528abf1"
+            ]
+        ]
+    },
+    {
+        "id": "ca72e7fa3cfe6a84",
+        "type": "function",
+        "z": "d1a44027b2d76de7",
+        "name": "FinalDate",
+        "func": "var getDate = new Date(msg.payload)\nvar DateResult = getDate.toLocaleDateString('en-GB', {\n  day: 'numeric', month: 'short', year: 'numeric'\n})\n\nvar date = new Date(msg.payload);\ndate.setDate(date.getDate() + 1);\n\nvar DateResult2 = date.toLocaleDateString('en-GB', {\n  day: 'numeric', month: 'short', year: 'numeric'\n})\n\nconst date1 = getDate;\nconst date2 = new Date();\nconst diffTime = date2 - date1;\nconst diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); \n\nif (diffDays <= 0){\n    global.set('DatePickerbyDay2', 0)\nglobal.set('DatePickerbydayPlus', 0)\nmsg.payload = '0';\n}else{\n    global.set('DatePickerbyDay2', DateResult)\nglobal.set('DatePickerbydayPlus', DateResult2)\nmsg.payload = '1';\n    \n}\n\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 940,
+        "wires": [
+            [
+                "9a9de6f6e7a7569f"
+            ]
+        ]
+    },
+    {
+        "id": "9a9de6f6e7a7569f",
+        "type": "switch",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 330,
+        "y": 1020,
+        "wires": [
+            [
+                "35b6065780dcfd76"
+            ],
+            [
+                "6f65cce2d594d215"
+            ]
+        ]
+    },
+    {
+        "id": "8d5b079ba599c387",
+        "type": "ui_date_picker",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "label": "date",
+        "group": "0af3e6ee299ab033",
+        "order": 1,
+        "width": "4",
+        "height": "1",
+        "passthru": true,
+        "topic": "",
+        "topicType": "str",
+        "className": "",
+        "x": 390,
+        "y": 540,
+        "wires": [
+            [
+                "c9a95d84e0b59c79"
+            ]
+        ]
+    },
+    {
+        "id": "0cf14b22ab11ee6e",
+        "type": "ui_date_picker",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "label": "date",
+        "group": "e0d05c512a7f6755",
+        "order": 1,
+        "width": 5,
+        "height": 1,
+        "passthru": true,
+        "topic": "",
+        "topicType": "str",
+        "className": "",
+        "x": 370,
+        "y": 900,
+        "wires": [
+            [
+                "86bae60bf9b46833"
+            ]
+        ]
+    },
+    {
+        "id": "10a5b0bbdd9027b0",
+        "type": "ui_date_picker",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "label": "to",
+        "group": "e0d05c512a7f6755",
+        "order": 2,
+        "width": 5,
+        "height": 1,
+        "passthru": true,
+        "topic": "",
+        "topicType": "str",
+        "className": "",
+        "x": 370,
+        "y": 940,
+        "wires": [
+            [
+                "ca72e7fa3cfe6a84"
+            ]
+        ]
+    },
+    {
+        "id": "abb569631f7348c7",
+        "type": "ui_text",
+        "z": "d1a44027b2d76de7",
+        "group": "2af64c7204d7293d",
+        "order": 3,
+        "width": 7,
+        "height": 1,
+        "name": "",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 1070,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "875544e79b95e9f9",
+        "type": "ui_gauge",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "group": "2af64c7204d7293d",
+        "order": 9,
+        "width": 3,
+        "height": 3,
+        "gtype": "donut",
+        "title": "RUN",
+        "label": "Hr",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "24",
+        "colors": [
+            "#00b500",
+            "#00b500",
+            "#00b500"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 1070,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "40eb2870d8fcc9c9",
+        "type": "ui_gauge",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "group": "2af64c7204d7293d",
+        "order": 5,
+        "width": 3,
+        "height": 3,
+        "gtype": "donut",
+        "title": "Stop",
+        "label": "Hr",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "24",
+        "colors": [
+            "#ff0000",
+            "#ff0000",
+            "#ff0000"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 1070,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "6ac6b9a6abc52cc1",
+        "type": "ui_gauge",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "group": "2af64c7204d7293d",
+        "order": 7,
+        "width": 3,
+        "height": 3,
+        "gtype": "donut",
+        "title": "Alarm",
+        "label": "Hr",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "24",
+        "colors": [
+            "#ffff00",
+            "#ffff00",
+            "#ffff00"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 1070,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "f5e1df526a8aa9d5",
+        "type": "ui_chart",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "group": "0af3e6ee299ab033",
+        "order": 1,
+        "width": 6,
+        "height": 7,
+        "label": "Operation Time(Hr)",
+        "chartType": "bar",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "No Data",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "24",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#00ff00",
+            "#ff0000",
+            "#ffff00",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1210,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "773abab4b528abf1",
+        "type": "ui_chart",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "group": "e0d05c512a7f6755",
+        "order": 4,
+        "width": 14,
+        "height": 6,
+        "label": "Operation Time(Hr)",
+        "chartType": "bar",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "No Data",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "24",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#00ff00",
+            "#ff0000",
+            "#ffff00",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1150,
+        "y": 1020,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f703c4cf07b566c6",
+        "type": "mqtt in",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "topic": "001",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "04d1b145274bf015",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 370,
+        "y": 1300,
+        "wires": [
+            [
+                "4d6a40cdd0fd38cb"
+            ]
+        ]
+    },
+    {
+        "id": "07e5d128397e2bd7",
+        "type": "comment",
+        "z": "d1a44027b2d76de7",
+        "name": "Status machine",
+        "info": "",
+        "x": 280,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "4d6a40cdd0fd38cb",
+        "type": "switch",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 580,
+        "y": 1300,
+        "wires": [
+            [
+                "389c92212676470b"
+            ],
+            [
+                "40d8f6710948267f"
+            ],
+            [
+                "68c441c79c39f4e5"
+            ]
+        ]
+    },
+    {
+        "id": "389c92212676470b",
+        "type": "change",
+        "z": "d1a44027b2d76de7",
+        "name": "STOP",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "STOP",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 710,
+        "y": 1280,
+        "wires": [
+            [
+                "e6e379adca4c94b9",
+                "0d34478e6d380a60"
+            ]
+        ]
+    },
+    {
+        "id": "40d8f6710948267f",
+        "type": "change",
+        "z": "d1a44027b2d76de7",
+        "name": "RUNNING",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "RUNNING",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 730,
+        "y": 1320,
+        "wires": [
+            [
+                "e6e379adca4c94b9",
+                "0d34478e6d380a60"
+            ]
+        ]
+    },
+    {
+        "id": "68c441c79c39f4e5",
+        "type": "change",
+        "z": "d1a44027b2d76de7",
+        "name": "ALARM",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "ALARM",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 720,
+        "y": 1360,
+        "wires": [
+            [
+                "e6e379adca4c94b9",
+                "0d34478e6d380a60"
+            ]
+        ]
+    },
+    {
+        "id": "e6e379adca4c94b9",
+        "type": "ui_text",
+        "z": "d1a44027b2d76de7",
+        "group": "2af64c7204d7293d",
+        "order": 1,
+        "width": 7,
+        "height": 1,
+        "name": "",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 930,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "0d34478e6d380a60",
+        "type": "debug",
+        "z": "d1a44027b2d76de7",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 1360,
+        "wires": []
+    },
+    {
+        "id": "e4f16d3f.f720b",
+        "type": "MSSQL-UCGv2-CN",
+        "name": "insertdata",
+        "server": "localhost\\SQLEXPRESS",
+        "port": "1433",
+        "encyption": false,
+        "database": "Oven_Temperature",
+        "pool": "20",
+        "connectionTimeout": "16000",
+        "requestTimeout": "15000"
+    },
+    {
+        "id": "04d1b145274bf015",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "192.168.1.100",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "0af3e6ee299ab033",
+        "type": "ui_group",
+        "name": "Daily report",
+        "tab": "e22e39b18268da0e",
+        "order": 1,
+        "disp": true,
+        "width": "13",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e0d05c512a7f6755",
+        "type": "ui_group",
+        "name": "Montthly report",
+        "tab": "fe806489406eb91a",
+        "order": 1,
+        "disp": true,
+        "width": "20",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "2af64c7204d7293d",
+        "type": "ui_group",
+        "name": "MC01 STATUS",
+        "tab": "e906eb472cda2023",
+        "order": 1,
+        "disp": true,
+        "width": "16",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e22e39b18268da0e",
+        "type": "ui_tab",
+        "name": "History dairy report",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "fe806489406eb91a",
+        "type": "ui_tab",
+        "name": "Monthly report",
+        "icon": "dashboard",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "e906eb472cda2023",
+        "type": "ui_tab",
+        "name": "MMS Dashboard",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
